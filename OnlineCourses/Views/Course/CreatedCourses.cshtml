@@ -1,0 +1,107 @@
+﻿@model IndexViewModel
+
+<head>
+    <meta charset="utf-8" />
+    <title>OnlineCourses</title>
+</head>
+
+<input style="display:block;" onclick="create()" type="submit" id="purchase" value="Coздать новый курс" />
+
+<div id="createcourse" style="display:none;">
+    <p>
+        <label>Введите название</label>
+        <br />
+        <input type="text" id="title" />
+        <br />
+        <br />
+        <label>Введите описание</label>
+        <br />
+        <textarea id="description" style="none width: 300px; height: 100px;"></textarea>
+
+        <input onclick="save()" style="display:block;" type="submit" value="Сохранить" />
+    </p>
+</div>
+
+
+@if(Model != null)
+{
+    <h2>Список курсов</h2>
+    <table class="table" id="table">
+        <thead><tr><th data-type="string">Название ⇅</th><th>Описание</th></tr></thead>
+        <tbody>
+            @foreach (var item in Model.Courses)
+            {
+                <tr>
+                    <td><a href=@("http://localhost:5152/Course/Course?id=" + item.Id)>@item.Title</a></td>
+                    <td>@item.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>
+        @if (Model.PageViewModel.HasPreviousPage)
+        {
+            <a asp-action="Main"
+               asp-route-page="@(Model.PageViewModel.PageNumber - 1)" class="glyphicon glyphicon-chevron-left">
+                Назад
+            </a>
+        }
+        @if (Model.PageViewModel.HasNextPage)
+        {
+            <a asp-action="Main"
+               asp-route-page="@(Model.PageViewModel.PageNumber + 1)" class="glyphicon glyphicon-chevron-right">
+                Вперед
+            </a>
+        }
+    </p>
+}
+else
+{
+    <h3>Курсы ещё не созданы</h3>
+}
+
+
+<script>
+    let check = false
+
+    cell.onclick = function (e) {
+        let th = e.target
+        sortTable(th.cellIndex)
+    }
+
+    function sortTable(colNum) {
+        let tbody = table.querySelector('tbody')
+        let rowsArray = Array.from(tbody.rows)
+        let compare = function (rowA, rowB) {
+            if (check) {
+                return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? -1 : 1
+            }
+            else {
+                return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? 1 : -1
+            }
+        }
+        rowsArray.sort(compare)
+        tbody.append(...rowsArray)
+        check = !check
+    }
+
+    function create() {
+        document.getElementById("createcourse").style.display = "block";
+    }
+
+    async function save() {
+        const response = await fetch("/Course/Create", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+                Title: document.getElementById("title").value,
+                Description: document.getElementById("description").value
+            })
+        });
+        if(response.status === 200)
+        {
+            const data = await response.json();
+            window.location.href = `/Course/Edit?id=${data.id}`;
+        }
+     }
+</script>

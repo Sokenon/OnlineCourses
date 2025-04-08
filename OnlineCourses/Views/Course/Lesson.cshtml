@@ -1,0 +1,101 @@
+﻿@model LessonViewModel
+
+<head>
+    <meta charset="utf-8" />
+    <title>@Model.Title</title>
+    <h3>@Model.course.Title</h3>
+    <h2>@Model.module.Title</h2>
+
+    <style>
+        .text-container {
+            max-width: 100%;
+            overflow: auto; 
+            padding: 20px; 
+            border: 1px solid #ccc; 
+            box-sizing: border-box; 
+            display:cblock;
+        }
+    </style>
+
+</head>
+
+<body>
+    @if (ViewBag.IsCreator)
+    {
+        <input onclick="edit()" style="display:block;" type="submit" id="edit" value="Редактировать" />
+    }
+    else
+    {
+        if (Model.Completed)
+        {
+            <h1>⭐⭐⭐ Урок пройден    ⭐⭐⭐</h1>
+        }
+        else
+        {
+            <h1>На изучении</h1>
+        }
+    }
+
+    <div class="text-container">
+        @Model.Content
+    </div>
+
+    <label style="display:none;" id="labeldescription">Введите новое описание</label>
+    <textarea id="inputdescription" style="display:none; none max-width: 100%; height: 400px;">@Model.Content</textarea>
+
+    <input asp-controller="Course" asp-area="" asp-action="Course" asp-route-id="@Model.course.Id" style="display:block;" type="submit" id="cancel" value="Назад к курсу" />
+    @if (!ViewBag.IsCreator)
+    {
+        <input asp-controller="Course" asp-area="" asp-action="Course" asp-route-id="@Model.course.Id" style="display:block;" type="submit" id="final" value="Завершить урок" />
+    }
+    <input onclick="save()" style="display:none;" type="submit" id="save" value="Сохранить изменения" />
+
+    <script>
+        // document.getElementById("purchase").addEventListener("click", async e => {
+        //     e.preventDefault();
+
+        //     const response = await fetch("/Course/Purchase", {
+        //         method: "POST",
+        //         headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        //         body: JSON.stringify({
+        //         CourseId: @Model.Id
+        //         })
+        //     });
+
+        //     if (response.status === 200) {
+        //         window.location.reload();
+        //     }
+        // });
+        // async function purchase() {
+        //     const response = await fetch("/Course/Purchase", {
+        //         method: "POST",
+        //         headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        //         body: JSON.stringify({
+        //             CourseId: @Model.Id
+        //                         })
+        //     });
+
+        //     if (response.status === 200) {
+        //         window.location.reload();
+        //     }
+        // }
+
+        async function edit() { //написать всплывание инаутов и кнопок сохранения
+
+        }
+
+        async function save() { //написать всплывание инаутов и кнопок сохранения
+
+        }
+        // document.getElementById("edit").addEventListener("click", async e => {
+        //     e.preventDefault();
+
+        //     const response = await fetch("/Course/Edit?id=" + @Model.Id.ToString(), {
+        //         method: "GET",
+        //         headers: { "Accept": "application/json", "Content-Type": "application/json" }
+        //     });
+        // });
+
+    </script>
+
+</body>

@@ -1,0 +1,111 @@
+﻿@model IndexViewModel
+
+<head>
+    <meta charset="utf-8" />
+    <title>Личный кабинет</title>
+</head>
+<body>
+    <div id="loginForm">
+        <h3 id="hLogin">Добро пожаловать, @(ViewBag.User.Username != null ? ViewBag.User.Username : "Пользователь")! </h3>
+
+        <p>
+            @if (ViewBag.User.Username == null)
+            {
+            <label>Введите имя</label><br />
+            <input type="text" id="username" />
+            <input style="display:block;" type="submit" id="submitUsername" value="Сохранить" />
+            }
+            @if (ViewBag.User.Username != null)
+            {
+                <label>Имя: @ViewBag.User.Username</label>
+                <label style="display:none;" id="writename">Введите новое имя</label><br />
+                <input style="display:none;" type="text" id="username" />
+                <input style="display:block;" type="submit" id="edit" value="Редактировать" />
+                <input style="display:none;" type="submit" id="submitUsername" value="Сохранить" />
+                <input style="display:none;" type="submit" id="cancel" value="Отмена" />
+            }
+        </p>
+    </div>
+    @if (ViewBag.User.Role == "teacher")
+    {
+        <div>
+            <h3><a asp-controller="Course" asp-action="CreatedCourses">Созданные курсы</a></h3>
+        </div>
+    }
+    <h2>Курсы</h2>
+    @if (Model == null)
+    {
+        <h3>У тебя ещё нет курсов, скорее запишись!</h3>
+    }
+    else
+    {
+        <table class="table" id="table">
+            <thead><tr><th data-type="string">Название ⇅</th><th>Описание</th><th>Сертификат</th></tr></thead>
+            <tbody>
+                @foreach (var item in Model.Courses)
+                {
+                    <tr>
+                        <td><a href=@("http://localhost:5152/Course/Course?id=" + item.Id)>@item.Title</a></td>
+                        <td>@item.Description</td>
+                        <td>@((ViewBag.IsComtlete as List<User_Course>).FirstOrDefault(uc => uc.CourseId == item.Id)?.Completed)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    @if (Model != null)
+    {
+        <p>
+            @if (Model.PageViewModel.HasPreviousPage)
+            {
+                <a asp-action="PersonalAccount"
+                   asp-route-page="@(Model.PageViewModel.PageNumber - 1)" class="glyphicon glyphicon-chevron-left">
+                    Назад
+                </a>
+            }
+            @if (Model.PageViewModel.HasNextPage)
+            {
+                <a asp-action="PersonalAccount"
+                   asp-route-page="@(Model.PageViewModel.PageNumber + 1)" class="glyphicon glyphicon-chevron-right">
+                    Вперед
+                </a>
+            }
+        </p>
+    }
+
+    <script>
+        document.getElementById("submitUsername").addEventListener("click", async e => {
+            e.preventDefault();
+
+            const response = await fetch("/User/SetName", {
+                method: "PUT",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    Username: document.getElementById("username").value
+                })
+            });
+
+            if (response.status === 200) {
+                window.location.reload();
+            }
+        });
+        document.getElementById("edit").addEventListener("click", async e => {
+            e.preventDefault();
+            document.getElementById("edit").style.display = "none";
+            document.getElementById("writename").style.display = "block";
+            document.getElementById("username").style.display = "block";
+            document.getElementById("submitUsername").style.display = "block";
+            document.getElementById("cancel").style.display = "block";
+        });
+        document.getElementById("cancel").addEventListener("click", async e => {
+            e.preventDefault();
+            document.getElementById("edit").style.display = "block";
+            document.getElementById("writename").style.display = "none";
+            document.getElementById("username").style.display = "none";
+            document.getElementById("submitUsername").style.display = "none";
+            document.getElementById("cancel").style.display = "none";
+        });
+
+
+    </script>
+</body>

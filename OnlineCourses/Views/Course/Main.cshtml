@@ -1,0 +1,91 @@
+﻿@model IndexViewModel
+@{
+    var selector = new SelectList(ViewBag.Teachers, "Id", "Username");
+}
+
+<head>
+    <meta charset="utf-8" />
+    <title>OnlineCourses</title>
+</head>
+
+<h2>Список курсов</h2>
+<div>
+    <label>Преподаватель: </label>
+    <select id="teacher" asp-items="selector">
+        <option value="">Все преподаватели</option>
+    </select>
+</div>
+<table class="table" id="table">
+    <thead><tr><th data-type="string">Название ⇅</th><th>Описание</th><th>Преподаватель</th></tr></thead>
+    <tbody>
+    @foreach (var item in Model.Courses)
+    {
+        <tr>
+            <td><a href=@("http://localhost:5152/Course/Course?id=" + item.Id)>@item.Title</a></td>
+            <td>@item.Description</td>
+                <td>@((ViewBag.Teachers as List<User>).FirstOrDefault(s => s.Id == item.TeacherId)?.Username)</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<p>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Main"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)" class="glyphicon glyphicon-chevron-left">
+            Назад
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Main"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)" class="glyphicon glyphicon-chevron-right">
+            Вперед
+        </a>
+    }
+</p>
+
+
+<script>
+    const cell = document.querySelector("#table > thead > tr > th")
+    const table = document.querySelector("#table")
+    let check = false
+    const allrows = Array.from((table.querySelector('tbody')).rows)
+
+    cell.onclick = function (e) {
+    let th = e.target
+    sortTable(th.cellIndex)
+    }
+
+    function sortTable(colNum) { 
+    let tbody = table.querySelector('tbody')
+    let rowsArray = Array.from(tbody.rows)
+    let compare = function(rowA, rowB) {
+        if (check) {
+                return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? -1 : 1
+            }
+            else {
+                return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? 1 : -1
+            }
+    }
+    rowsArray.sort(compare)
+    tbody.append(...rowsArray)
+    check = !check
+    }
+
+    document.querySelector("#teacher").onchange = function (e) {
+        let name = e.target.options[e.target.selectedIndex].text
+        let tbody = table.querySelector('tbody')
+        tbody.innerHTML = ""
+        if (e.target.selectedIndex == 0) {
+            tbody.append(...allrows)
+        }
+        else {
+            tbody.append(...allrows.filter((row) => {
+                return row.cells[2].textContent == name
+            }))
+        }
+    }
+
+</script>
+

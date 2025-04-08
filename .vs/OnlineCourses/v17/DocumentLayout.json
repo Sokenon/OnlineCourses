@@ -1,0 +1,101 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\user\\source\\repos\\OnlineCourses\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\source\\repos\\onlinecourses\\onlinecourses\\views\\course\\course.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\views\\course\\course.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\source\\repos\\onlinecourses\\onlinecourses\\controllers\\coursecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\controllers\\coursecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\source\\repos\\onlinecourses\\onlinecourses\\services\\classes\\courseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\services\\classes\\courseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\source\\repos\\onlinecourses\\onlinecourses\\models\\viewsmodels\\lessonviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\models\\viewsmodels\\lessonviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\source\\repos\\onlinecourses\\onlinecourses\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 197,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Course.cshtml",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Views\\Course\\Course.cshtml",
+              "RelativeDocumentMoniker": "OnlineCourses\\Views\\Course\\Course.cshtml",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Views\\Course\\Course.cshtml",
+              "RelativeToolTip": "OnlineCourses\\Views\\Course\\Course.cshtml",
+              "ViewState": "AQIAAFgAAAAAAAAAAAAAAG4AAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-07T14:30:42.321Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CourseController.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Controllers\\CourseController.cs",
+              "RelativeDocumentMoniker": "OnlineCourses\\Controllers\\CourseController.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Controllers\\CourseController.cs",
+              "RelativeToolTip": "OnlineCourses\\Controllers\\CourseController.cs",
+              "ViewState": "AQIAAB8AAAAAAAAAAAAgwD4AAAA0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-07T12:36:02.969Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CourseService.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Services\\Classes\\CourseService.cs",
+              "RelativeDocumentMoniker": "OnlineCourses\\Services\\Classes\\CourseService.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Services\\Classes\\CourseService.cs",
+              "RelativeToolTip": "OnlineCourses\\Services\\Classes\\CourseService.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAvwDEAAAA8AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-07T12:22:21.943Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LessonViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Models\\ViewsModels\\LessonViewModel.cs",
+              "RelativeDocumentMoniker": "OnlineCourses\\Models\\ViewsModels\\LessonViewModel.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Models\\ViewsModels\\LessonViewModel.cs",
+              "RelativeToolTip": "OnlineCourses\\Models\\ViewsModels\\LessonViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-07T14:50:04.849Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Program.cs",
+              "RelativeDocumentMoniker": "OnlineCourses\\Program.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\Program.cs",
+              "RelativeToolTip": "OnlineCourses\\Program.cs",
+              "ViewState": "AQIAABsAAAAAAAAAAAAAACgAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-28T13:12:13.072Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

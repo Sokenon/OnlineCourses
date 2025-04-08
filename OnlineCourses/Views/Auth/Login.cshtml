@@ -1,0 +1,80 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <title>OnlineCourses</title>
+</head>
+<body>
+    <div id="loginForm">
+        <h3 id="hLogin">Вход на сайт</h3>
+
+        <p>
+            <label>Введите e-mail</label><br />
+            <input type="email" id="email" />
+        </p>
+        <p>
+            <label>Введите пароль</label><br />
+            <input type="password" id="password" />
+        </p>
+        <input style="display:block;" type="submit" id="submitLogin" value="Войти" />
+        <input style="display:none;" type="submit" id="submitRegistration" value="Зарегистрироваться" />
+    </div>
+    <p>
+        <input style="display:block;"  type="submit" id="registration" value="Регистрация" />
+        <input style="display:none;" type="submit" id="logIn" value="Вход" />
+
+    </p>
+    <script>
+        document.getElementById("submitLogin").addEventListener("click", async e => {
+            e.preventDefault();
+            // отправляет запрос и получаем ответ
+            const response = await fetch("/Auth/Login", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value
+                })
+            });
+            // если запрос прошел плохо
+            if (response.status === 404) {
+                console.log("Пользователь не найден./nВозможно, не правильно введены имя или пароль.", response.status);
+            }
+            if (response.status === 200)
+            {
+                window.location.href = '/Course/Main';
+            }
+        });
+ 
+        document.getElementById("submitRegistration").addEventListener("click", async e => {
+            e.preventDefault();
+            const response = await fetch("/Auth/Registration", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value
+                })
+            });
+         });
+ 
+        document.getElementById("registration").addEventListener("click", async e => {
+            e.preventDefault();
+            document.getElementById("hLogin").innerText = "Регистрация";
+            document.getElementById("submitLogin").style.display = "none";
+            document.getElementById("submitRegistration").style.display = "block";
+            document.getElementById("registration").style.display = "none";
+            document.getElementById("logIn").style.display = "block";
+        });
+
+        document.getElementById("logIn").addEventListener("click", async e => {
+            e.preventDefault();
+            document.getElementById("hLogin").innerText = "Вход на сайт";
+            document.getElementById("submitLogin").style.display = "block";
+            document.getElementById("submitRegistration").style.display = "none";
+            document.getElementById("registration").style.display = "block";
+            document.getElementById("logIn").style.display = "none";
+        });
+
+    </script>
+</body>
+</html>

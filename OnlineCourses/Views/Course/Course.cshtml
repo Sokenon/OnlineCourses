@@ -1,0 +1,126 @@
+﻿@model CourseViewModel
+@{int numberModule = 1;}
+@{
+    int numberLesson = 1;
+}
+@{
+    string color = "grey";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <title>@Model.Title</title>
+    <style>
+        .module {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+            .module summary {
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+        .lessons {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+            .lessons li {
+                list-style-type: none;
+                margin: 5px 0;
+            }
+    </style>
+
+</head>
+
+<body>
+    @if (ViewBag.IsCreator)
+    {
+        <input onclick="edit()" style="display:block;" type="submit" id="edit" value="Редактировать" />
+    }
+    else
+    {
+        @if (ViewBag.Purchased)
+        {
+            if (Model.Complited)
+            {
+                <h1>⭐⭐⭐ Курс пройден    ⭐⭐⭐</h1>
+            }
+            else
+            {
+                <h1>На изучении</h1>
+            }
+        }
+        else
+        {
+            <input style="display:block;" onclick="purchase()" type="submit" id="purchase" value="Записаться" />
+        }
+    }
+
+    <h1>@Model.Title</h1>
+    <h3>@Model.Description</h3>
+
+    @if (Model.Modules != null)
+    {
+        @foreach (ModuleViewModel module in @Model.Modules!)
+        {
+            <div class="module" color=@color>
+                <details>
+                    <summary>Модуль @numberModule: @module.Title </summary>
+                    @if (module.Lessons != null)
+                    {
+                        <ul class="lessons">
+                            @foreach (LessonViewModel lesson in module.Lessons!)
+                            {
+                                <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Lesson" asp-route-id="@lesson.Id">Урок @numberLesson: @lesson.Title  @(lesson.Completed ? "⭐" : "✖")</a></li>
+                            }
+                        </ul>
+                    }
+                </details>
+            </div>
+        }
+
+    }
+    <script>
+        // document.getElementById("purchase").addEventListener("click", async e => {
+        //     e.preventDefault();
+
+        //     const response = await fetch("/Course/Purchase", {
+        //         method: "POST",
+        //         headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        //         body: JSON.stringify({
+        //         CourseId: @Model.Id
+        //         })
+        //     });
+
+        //     if (response.status === 200) {
+        //         window.location.reload();
+        //     }
+        // });
+        async function purchase() 
+        { 
+            const response = await fetch("/Course/Purchase", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    CourseId: @Model.Id
+                        })
+            });
+
+            if (response.status === 200) {
+                window.location.reload();
+            }
+        }
+
+        async function edit()
+        {
+            window.location.href = ('/Course/Edit?id=' + @Model.Id.ToString());
+        }
+
+    </script>
+
+</body>
+@* </html> *@
