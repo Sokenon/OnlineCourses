@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj": {}
+    "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj": {}
   },
   "projects": {
-    "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj": {
+    "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
         "projectName": "OnlineCourses",
-        "projectPath": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
+        "projectPath": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\obj\\",
+        "outputPath": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,7 +43,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -78,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

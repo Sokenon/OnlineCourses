@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lTCh+LFjkuFFk/I9GTH0O5LUSfsQuQ9+EoZ1+UEnghfk750y0/82p5z1aiSlR3N7mtqBlm3CEKXZh+BzjAV0fw==",
+  "dgSpecHash": "0ofETYX5Xko=",
   "success": true,
-  "projectFilePath": "C:\\Users\\user\\source\\repos\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
+  "projectFilePath": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.8\\microsoft.aspnetcore.authentication.jwtbearer.8.0.8.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.4\\microsoft.entityframeworkcore.8.0.4.nupkg.sha512",

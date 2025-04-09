@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\documents\\visual studio 2022\\onlinecourses\\onlinecourses\\models\\viewsmodels\\lessonviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\models\\viewsmodels\\lessonviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\documents\\visual studio 2022\\onlinecourses\\onlinecourses\\views\\course\\course.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\views\\course\\course.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -17,6 +13,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\documents\\visual studio 2022\\onlinecourses\\onlinecourses\\services\\classes\\courseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\services\\classes\\courseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\documents\\visual studio 2022\\onlinecourses\\onlinecourses\\models\\viewsmodels\\lessonviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|solutionrelative:onlinecourses\\models\\viewsmodels\\lessonviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4B1AC337-A88F-4213-8B1F-66A8A748FE7C}|OnlineCourses\\OnlineCourses.csproj|c:\\users\\user\\documents\\visual studio 2022\\onlinecourses\\onlinecourses\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,24 +30,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 197,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Course.cshtml",
               "DocumentMoniker": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\Views\\Course\\Course.cshtml",
               "RelativeDocumentMoniker": "OnlineCourses\\Views\\Course\\Course.cshtml",
               "ToolTip": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\Views\\Course\\Course.cshtml",
               "RelativeToolTip": "OnlineCourses\\Views\\Course\\Course.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAIwBMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-04-07T14:30:42.321Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "CourseController.cs",
               "DocumentMoniker": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\Controllers\\CourseController.cs",
               "RelativeDocumentMoniker": "OnlineCourses\\Controllers\\CourseController.cs",
@@ -59,7 +59,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "CourseService.cs",
               "DocumentMoniker": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\Services\\Classes\\CourseService.cs",
               "RelativeDocumentMoniker": "OnlineCourses\\Services\\Classes\\CourseService.cs",
@@ -71,16 +71,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "LessonViewModel.cs",
               "DocumentMoniker": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\Models\\ViewsModels\\LessonViewModel.cs",
               "RelativeDocumentMoniker": "OnlineCourses\\Models\\ViewsModels\\LessonViewModel.cs",
               "ToolTip": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\Models\\ViewsModels\\LessonViewModel.cs",
               "RelativeToolTip": "OnlineCourses\\Models\\ViewsModels\\LessonViewModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-07T14:50:04.849Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-07T14:50:04.849Z"
             },
             {
               "$type": "Document",
@@ -93,6 +92,10 @@
               "ViewState": "AQIAABsAAAAAAAAAAAAAACgAAAA2AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-28T13:12:13.072Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         }
