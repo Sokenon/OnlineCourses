@@ -16,9 +16,12 @@ namespace OnlineCourses.Services.Interfaces
         public bool Edit(CourseDTO course);
         public bool EditModule(ModuleDTO module);
         public bool IsLearning(int id);
-        public bool EditLesson(LessonDTO lesson);
+        public bool EditLesson(LessonIDDTO lesson);
         public Course Create(string title, string descrption, int teacherId);
         public LessonViewModel GetLesson(int id, int studentID);
+        public Lesson AddLesson(LessonDTO lesson);
+        public ModuleViewModel GetModule(int id);
+        public bool FinalLesson(int id, int idStudent);
 
     }
 }

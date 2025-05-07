@@ -1,8 +1,8 @@
 ﻿namespace OnlineCourses.Models.DTO
 {
-    public class LessonIDDTO
+    public class LessonDTO
     {
-        public int LessonId { get; set; }
+        public int ModuleId { get; set; }
         public string? Title { get; set; }
         public string? Content { get; set; }
 

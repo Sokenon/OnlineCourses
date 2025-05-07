@@ -32,20 +32,20 @@
 
 </head>
 <script>
-    function visability(label, input, submit, delete, lessons) {
+    function visability(label, input, submit, deletee, lessons) {
         if (document.getElementById(label).style.display == "none") {
             document.getElementById(label).style.display = "block";
             document.getElementById(input).style.display = "block";
             document.getElementById(submit).style.display = "block";
-            delete ? document.getElementById(submit + "delete").style.display = "block";
-            lessons ? document.getElementById(submit + "lessons").style.display = "block";
+            if (deletee) document.getElementById(submit + "delete").style.display = "block";
+            if (lessons) document.getElementById(submit + "lessons").style.display = "block";
         }
         else {
             document.getElementById(label).style.display = "none";
             document.getElementById(input).style.display = "none";
             document.getElementById(submit).style.display = "none";
-            delete ? document.getElementById(submit + "delete").style.display = "none";
-            lessons ? document.getElementById(submit + "lessons").style.display = "none";
+            if (deletee) document.getElementById(submit + "delete").style.display = "none";
+            if (lessons) document.getElementById(submit + "lessons").style.display = "none";
         }
     }
 
@@ -132,23 +132,10 @@
     }
 
     async function lessons(id) {
-        window.location.href = ('/Course/Lessons?course=' + @Model.Id.ToString() + '&module=' + id);
+        window.location.href = ('/Course/Lessons?id=' + id);
     }
 
 
-    // async function editLesson(id) {
-    //     const response = await fetch("/Course/EditLesson", {
-    //         method: "PUT",
-    //         headers: { "Accept": "application/json", "Content-Type": "application/json" },
-    //         body: JSON.stringify({
-    //             Id: id,
-    //             Title: document.getElementById(("inputlesson" + id)).value
-    //         })
-    //     });
-    //     if (response.status === 200) {
-    //         window.location.reload();
-    //     }
-    // }
 </script>
 <body>
     <div>
@@ -156,40 +143,38 @@
         <input onclick="deleteCourse(@Model.Id.ToString())" style="display:block;" type="submit" id=delete value="Удалить курс" />
 
 
-        <h2 id="title" onclick="visability('labeltitle', 'inputtitle', '@Model.Id.ToString()', false, false)">@Model.Title ✏</h2>
+        <h2 id="title" onclick="visability('labeltitle', 'inputtitle', 'submittitle', false, false)">@Model.Title ✏</h2>
         <label style="display:none;" id="labeltitle">Введите новое название</label>
         <input style="display:none;" type="text" id="inputtitle" />
-        <input onclick="editCourseTitle(@Model.Id.ToString())" style="display:none;" type="submit" id=@Model.Id.ToString() value="Сохранить" />
+        <input onclick="editCourseTitle(@Model.Id.ToString())" style="display:none;" type="submit" id="submittitle" value="Сохранить" />
         <br />
 
-        <h3 id="description" onclick="visability('labeldescription', 'inputdescription' , '@Model.Id.ToString()', false, false)">@Model.Title>@Model.Description ✏</h3>
+        <h3 id="description" onclick="visability('labeldescription', 'inputdescription' , 'submitdescription', false, false)">@Model.Description ✏</h3>
         <label style="display:none;" id="labeldescription">Введите новое описание</label>
         <textarea id="inputdescription" style="display:none; none width: 300px; height: 100px;"></textarea>
-        <input onclick="editCourseDescription(@Model.Id.ToString())" style="display:none;" type="submit" id=@Model.Id.ToString() value="Сохранить" />
+        <input onclick="editCourseDescription(@Model.Id.ToString())" style="display:none;" type="submit" id="submitdescription" value="Сохранить" />
 
         <br />
     </div>
 
-    @if (Model.Modules != null)
+    @if (Model.Modules != null && Model.Modules[0].Id.HasValue)
     {
         @foreach (ModuleViewModel module in @Model.Modules!)
         {
             <div class="module">
-                <h2 onclick="visability('@("labelmodule" + @module.Id.ToString())', '@(module.Id.ToString() + "new")', '@(module.Id.ToString())', true, true)">Модуль @numberModule: @module.Title </h2>
-                <label style="display:none;" id="labelmodule" + @module.Id.ToString())>Введите новое название</label>
+                <h3 onclick="visability('@(module.Id.ToString() + "labelmodule")', '@(module.Id.ToString() + "new")', '@(module.Id.ToString())', true, true)">Модуль @(numberModule++): @module.Title ✏</h3>
+                <label style="display:none;" id=@(module.Id.ToString() + "labelmodule")>Введите новое название</label>
                 <input style="display:none;" type="text" id=@(module.Id.ToString() + "new") />
                 <input onclick="editModule(@module.Id.ToString())" style="display:none;" type="submit" id=@module.Id.ToString() value="Сохранить" />
                 <input onclick="deleteModule(@module.Id.ToString())" style="display:none;" type="submit" id=@(module.Id.ToString() + "delete") value="Удалить модуль" />
                 <input onclick="lessons(@module.Id.ToString())" style="display:none;" type="submit" id=@(module.Id.ToString() + "lessons") value="Перейти к редактированию уроков" />
-
-
             </div>
         }
     }
     <div>
         <label style="display:block;" id=labelModuleTitle>Введите название нового модуля</label>
         <input style="display: block;" type="text" id=newModuleTitle />
-        <input onclick="create('newModuleTitle')" style="display:block;" type="submit" id=create value="Создать новый модуль" />
+        <input onclick="createModule('newModuleTitle')" style="display:block;" type="submit" id=create value="Создать новый модуль" />
     </div>
 
 

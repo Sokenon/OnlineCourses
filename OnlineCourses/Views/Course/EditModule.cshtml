@@ -1,0 +1,127 @@
+﻿@model ModuleViewModel;
+@{
+    int numberLesson = 1;
+}
+
+<head>
+    <meta charset="utf-8" />
+    <title>@Model.CourseTitle</title>
+    <style>
+        .text-container {
+            max-width: 100%;
+            overflow: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            display: cblock;
+        }
+    </style>
+</head>
+
+<script>
+
+    let title = "none";
+    let content = "none";
+
+    function addLesson()
+    {
+        document.getElementById("add").style.display = "none";
+        document.getElementById("labelTitle").style.display = "block";
+        document.getElementById("inputTitle").style.display = "block";
+        document.getElementById("saveTitle").style.display = "block";
+    }
+
+    async function saveTitle()
+    {
+        document.getElementById("labelTitle").style.display = "none";
+        document.getElementById("inputTitle").style.display = "none";
+        document.getElementById("saveTitle").style.display = "none";
+        title = document.getElementById("inputTitle").value;
+        document.getElementById("titleNew").textContent = title;
+        document.getElementById("titleNew").style.display = "block";
+        document.getElementById("labelContent").style.display = "block";
+        document.getElementById("inputContent").style.display = "block";
+        document.getElementById("saveContent").style.display = "block";
+        document.getElementById("saveNoContent").style.display = "block";
+    }
+
+    async function saveContent(save)
+    {
+        if (save) 
+        {
+            if (document.getElementById("inputContent").value.length == 0)
+            {
+                alert('Ввeдите контент урока!');
+                return;
+            }
+            else
+            {
+                content = document.getElementById("inputContent").value;
+            }
+        }
+        await createModule(title, content, @Model.Id.ToString());
+    }
+
+    async function createModule(title, content, module) {
+        const response = await fetch("/Course/CreateLesson", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ModuleId: module,
+                Title: title,
+                Content: content
+            })
+        });
+        if (response.status === 200) {
+            window.location.reload();
+        }
+    }
+
+	async function back(id) {
+        window.location.href = `/Course/Edit?id=${id}`;
+	}
+
+    async function lesson(id){
+        window.location.href = `/Course/Lesson?id=${id}`;
+    }
+
+</script>
+
+
+<body>
+    <li class="nav-item"><h1 onclick="back(@Model.CourseId.ToString())">@Model.CourseTitle ←</h1></li>
+    <h2>@Model.Title</h2>
+	@if (Model.Lessons == null || Model.Lessons.Count <= 0)
+	{
+		<h3>Уроков ещё нет</h3>
+	}
+	else
+	{
+        @foreach (LessonViewModel lesson in @Model.Lessons!)
+        {
+            <div class="text-container">
+                <details>
+                    <summary onclick="lesson(@lesson.Id.ToString())">Урок @(numberLesson++): @lesson.Title →</summary>
+                </details>
+            </div>
+        }
+    }
+
+    <input onclick="addLesson()" style="display:block;" type="submit" id="add" value="Добавить урок" />
+
+
+    <label style="display:none;" id="labelTitle">Введите название урока</label>
+    <textarea id="inputTitle" style="display:none; max-width: 100%; height: 400px;"></textarea>
+
+    <input onclick="saveTitle()" style="display:none;" type="submit" id="saveTitle" value="Сохранить название" />
+
+    <h3 style="display:none;" id="titleNew">title</h3>
+    <label style="display:none;" id="labelContent">Введите содержимое урока</label>
+    <textarea id="inputContent" style="display:none; max-width: 100%; height: 400px;"></textarea>
+
+    <input onclick="saveContent(true)" style="display:none;" type="submit" id="saveContent" value="Сохранить урок" />
+    <input onclick="saveContent(false)" style="display:none;" type="submit" id="saveNoContent" value="Сохранить без материала" />
+
+
+</body>
+

@@ -51,39 +51,6 @@ namespace OnlineCourses.Services.Classes
         {
             CourseViewModel course = new CourseViewModel();
 
-            //var result = db.Courses.Where(course => course.Id == id)
-            //    .Join(db.Modules, 
-            //    course => course.Id,
-            //    module => module.CourseId,
-            //    (course, module) => new { 
-            //        Course = course, 
-            //        Module = module })
-            //    .Join(db.Lessons,
-            //    combined => combined.Module.Id,
-            //    lesson => lesson.ModuleId,
-            //    (combined, lesson) => new {
-            //        CourseId = combined.Course.Id,
-            //        CourseTitle = combined.Course.Title,
-            //        CourseDescription = combined.Course.Description,
-            //        combined.Course.TeacherId,
-            //        ModuleId = combined.Module.Id,
-            //        ModuleTitle = combined.Module.Title,
-            //        LessonTitle = lesson.Title,
-            //        LessonId = lesson.Id }).Select(com => new
-            //        {
-            //            com.CourseId,
-            //            com.CourseTitle,
-            //            com.TeacherId,
-            //            com.CourseDescription,
-            //            com.ModuleId,
-            //            com.ModuleTitle,
-            //            com.LessonTitle,
-            //            com.LessonId,
-            //            Completed = (db.User_Lessons.Where(us => us.LessonId == com.LessonId && us.StudentId == userId).Where(comus => comus.LessonId == com.LessonId).Count() > 0 ? true : false)
-            //        }
-            //        )
-            //    .ToList();
-
             var result = db.Courses
                 .Where(course => course.Id == id)
                 .GroupJoin(db.Modules,
@@ -112,7 +79,7 @@ namespace OnlineCourses.Services.Classes
                         Completed = lesson != null && db.User_Lessons
                             .Any(ul => ul.LessonId == lesson.Id && ul.StudentId == userId)
                     })
-                .ToList();
+                .OrderBy(end => end.ModuleId).ToList();
             if (result.Count <= 0)
             {
                 return course;
@@ -128,7 +95,7 @@ namespace OnlineCourses.Services.Classes
                 {
                     if (course.Modules.Count() == 0 || !course.Modules.Any(m => m.Title == result[i].ModuleTitle))
                     {
-                        course.Modules!.Add(new ModuleViewModel() { Title = result[i].ModuleTitle, Lessons = new List<LessonViewModel>() });
+                        course.Modules!.Add(new ModuleViewModel() { Title = result[i].ModuleTitle, Lessons = new List<LessonViewModel>(), Id = result[i].ModuleId });
                         course.Modules.FirstOrDefault(m => m.Title == result[i].ModuleTitle)!.Lessons!.Add(new LessonViewModel() { Id = result[i].LessonId, Title = result[i].LessonTitle, Completed = result[i].Completed });
                     }
                     else if (course.Modules.Any(m => m.Title == result[i].ModuleTitle))
@@ -137,6 +104,10 @@ namespace OnlineCourses.Services.Classes
                     }
                 }
                 course.Complited = IsCompleted(course.Modules!);
+                foreach (var module in course.Modules)
+                {
+                    module.Lessons = module.Lessons!.OrderBy(l => l.Id).ToList();
+                }   
             }
             else
             {
@@ -209,7 +180,7 @@ namespace OnlineCourses.Services.Classes
             }
             return false;
         }
-        public bool EditLesson(LessonDTO lesson)
+        public bool EditLesson(LessonIDDTO lesson)
         {
             if (lesson.Title != null && lesson.Content != null)
             {
@@ -245,7 +216,7 @@ namespace OnlineCourses.Services.Classes
         {
             LessonViewModel lesson = new LessonViewModel { module = new Module(), course = new Course() };
 
-            var result = db.Lessons.Where(l => l.Id == id).Join(db.Modules, l => l.ModuleId, module => module.Id, (l, module) => new { Lesson = l, Module = module }).Join(db.Courses, combined => combined.Module.CourseId, course => course.Id, (combined, course) => new { Id = combined.Lesson.Id, Title = combined.Lesson.Title, Content = combined.Lesson.Content, ModuleId = combined.Module.Id, ModuleTitle = combined.Module.Title, CourseId = course.Id, CourseTitle = course.Title, Completed = db.User_Lessons.FirstOrDefault(us => us.LessonId == combined.Lesson.Id && us.StudentId == studentId)!.Completed }).ToList();
+            var result = db.Lessons.Where(l => l.Id == id).Join(db.Modules, l => l.ModuleId, module => module.Id, (l, module) => new { Lesson = l, Module = module }).Join(db.Courses, combined => combined.Module.CourseId, course => course.Id, (combined, course) => new { combined.Lesson.Id, combined.Lesson.Title, combined.Lesson.Content, ModuleId = combined.Module.Id, ModuleTitle = combined.Module.Title, CourseId = course.Id, CourseTitle = course.Title, course.TeacherId, Completed = db.User_Lessons.Any(us => us.LessonId == combined.Lesson.Id && us.StudentId == studentId) ? db.User_Lessons.FirstOrDefault(us => us.LessonId == combined.Lesson.Id && us.StudentId == studentId)!.Completed : false }).ToList();
 
             if (result.Count <= 0)
             {
@@ -260,8 +231,51 @@ namespace OnlineCourses.Services.Classes
             lesson.module.Title = result[0].ModuleTitle;
             lesson.course.Id = result[0].CourseId;
             lesson.course.Title = result[0].CourseTitle;
+            lesson.course.TeacherId = result[0].TeacherId;
 
             return lesson;
         }
+        public Lesson AddLesson(LessonDTO lesson)
+        {
+            Lesson newLesson = new Lesson { Title = lesson.Title, Content = lesson.Content, ModuleId = lesson.ModuleId };
+
+            db.Lessons.AddAsync(newLesson);
+            db.SaveChanges();
+
+            return newLesson;
+        }
+        public ModuleViewModel GetModule(int id)
+        {   
+            var result = db.Lessons.Where(l => l.ModuleId == id).Join(db.Modules, l => l.ModuleId, module => module.Id, (l, module) => new { Lesson = l, Module = module }).Join(db.Courses, combined => combined.Module.CourseId, course => course.Id, (combined, course) => new { combined.Lesson.Id, combined.Lesson.Title, combined.Lesson.Content, ModuleId = combined.Module.Id, ModuleTitle = combined.Module.Title, CourseId = course.Id, CourseTitle = course.Title, CourseCreator = course.TeacherId }).OrderBy(end => end.Id).ToList();
+            if (result.Count <= 0)
+            {
+                var resultForNull = db.Modules.Where(m => m.Id == id).Join(db.Courses, m => m.CourseId, course => course.Id, (m, course) => new { ModuleId = m.Id, ModuleTitle = m.Title, CourseId = course.Id, CourseTitle = course.Title, CourseCreator = course.TeacherId }).ToList();
+                return new ModuleViewModel { Id = resultForNull[0].ModuleId, Title = resultForNull[0].ModuleTitle, CourseId = resultForNull[0].CourseId, CourseTitle = resultForNull[0].CourseTitle, CreatorId = resultForNull[0].CourseCreator };
+            }
+            List<LessonViewModel> lessons = new List<LessonViewModel>();
+            for (int i = 0; i < result.Count(); i++)
+            {
+                lessons.Add(new LessonViewModel() { Id = result[i].Id, Title = result[i].Title, Content = result[i].Content });
+            }
+            ModuleViewModel module = new ModuleViewModel { Id = id, Title = result[0].ModuleTitle, CourseId = result[0].CourseId, CourseTitle = result[0].CourseTitle, CreatorId = result[0].CourseCreator, Lessons = lessons };
+            return module;
+        }
+        public bool FinalLesson(int id, int idStudent)
+        {
+            if (db.User_Lessons.Where(ul => ul.LessonId == id && ul.StudentId == idStudent).Count() > 0)
+            {
+                db.User_Lessons.Where(ul => ul.LessonId == id && ul.StudentId == idStudent).ExecuteUpdate(p => p.SetProperty(l => l.Completed, true));
+                db.SaveChanges();
+            }
+            else
+            {
+                User_Lesson ul = new User_Lesson { LessonId = id, StudentId = idStudent, Completed = true };
+                db.User_Lessons.AddAsync(ul);
+                db.SaveChanges();
+            }
+            return true; 
+        }
+
+
     }
 }

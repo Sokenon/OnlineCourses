@@ -20,22 +20,25 @@ namespace OnlineCourses.Middleware
                 if (context.Request.Cookies["Token"] != null)
                 {
                     SecurityToken validatedToken;
-                    ClaimsPrincipal principial = tokenService.Validation(context.Request.Cookies["Token"]!.ToString(), out validatedToken);
-                    if (principial.Identity.IsAuthenticated)
+                    try
                     {
-                        //return;
-                        await next.Invoke(context);
+                        ClaimsPrincipal principial = tokenService.Validation(context.Request.Cookies["Token"]!.ToString(), out validatedToken);
+                        if (principial.Identity!.IsAuthenticated)
+                        {
+                            await next.Invoke(context);
+                        }
+                        else
+                        {
+                            context.Response.Redirect("/Auth/Login");
+                        }
                     }
-                    else
+                    catch (Exception)
                     {
-                        context.Response.StatusCode = 401;
                         context.Response.Redirect("/Auth/Login");
-
                     }
                 }
                 else
                 { 
-                    context.Response.StatusCode = 401;
                     context.Response.Redirect("/Auth/Login");
                 }
             }

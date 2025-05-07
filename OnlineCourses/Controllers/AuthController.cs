@@ -62,7 +62,7 @@ namespace OnlineCourses.Controllers
                 {
                     User user = userService.AddNewUser(body.Email, hash);
                     httpContext.Response.Cookies.Append("Token", new JwtSecurityTokenHandler().WriteToken(tokenService.Token(user!.Id!.ToString(), user!.Role!)));
-                    return RedirectToAction("Main", "Course");
+                    return new StatusCodeResult(200);
                 }
                 else
                 {

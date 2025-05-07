@@ -1,10 +1,12 @@
-﻿@model LessonViewModel
+﻿@using System.Web
+@model LessonViewModel
 
 <head>
     <meta charset="utf-8" />
     <title>@Model.Title</title>
-    <h3>@Model.course.Title</h3>
-    <h2>@Model.module.Title</h2>
+    <h3>@Model.course!.Title</h3>
+    <h2>@Model.module!.Title</h2>
+    <h1>@Model.Title!.ToString()</h1>
 
     <style>
         .text-container {
@@ -19,20 +21,103 @@
 
 </head>
 
+<script>
+
+    async function show(check) {
+        if (check)
+        {
+            document.getElementById("labelTitle").style.display = "block";
+            document.getElementById("inputTitle").style.display = "block";
+            document.getElementById("labelContent").style.display = "block";
+            document.getElementById("inputContent").style.display = "block";
+            document.getElementById("save").style.display = "block";
+            document.getElementById("edit").style.display = "none";
+            document.getElementById("cancel").style.display = "block";
+        }
+        else
+        {
+            document.getElementById("labelTitle").style.display = "none";
+            document.getElementById("inputTitle").style.display = "none";
+            document.getElementById("labelContent").style.display = "none";
+            document.getElementById("inputContent").style.display = "none";
+            document.getElementById("save").style.display = "none";
+            document.getElementById("edit").style.display = "block";
+            document.getElementById("cancel").style.display = "none";
+        }
+    }
+
+    async function save()
+    {
+        let content = "";
+        if (document.getElementById("inputContent").value.length == 0)
+        {
+            alert('Ввeдите контент урока!');
+            return;
+        }
+        if(document.getElementById("inputTitle").value.length == 0)
+        {
+            alert('Ввeдите название урока!');
+            return;
+        }
+        else
+        {
+            const title = document.getElementById("inputTitle").value;
+            content = document.getElementById("inputContent").value;
+            const response = await fetch("/Course/EditLesson", {
+                method: "PUT",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    LessonId: @Model.Id,
+                    Title: title,
+                    Content: content
+                })
+            });
+            if (response.status === 200) {
+                window.location.reload();
+            }
+            else
+            {
+                alert('Ошибка редактирования урока!');
+            }
+        }
+
+    }
+
+    async function back(id) {
+        window.location.href = "/Course/Course?id=" + id;
+    }
+
+    async function finish(id) {
+
+        const response = await fetch("/Course/FinalLesson", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+                LessonId: @Model.Id
+            })
+        });
+        if(response.status === 200) {
+        window.location.href = "/Course/Course?id=" + id;
+        }
+    }
+
+</script>
+
+
 <body>
     @if (ViewBag.IsCreator)
     {
-        <input onclick="edit()" style="display:block;" type="submit" id="edit" value="Редактировать" />
+        <input onclick="show(true)" style="display:block;" type="submit" id="edit" value="Редактировать" />
     }
     else
     {
         if (Model.Completed)
         {
-            <h1>⭐⭐⭐ Урок пройден    ⭐⭐⭐</h1>
+            <h3>⭐⭐⭐ Урок пройден    ⭐⭐⭐</h3>
         }
         else
         {
-            <h1>На изучении</h1>
+            <h3>На изучении</h3>
         }
     }
 
@@ -40,62 +125,24 @@
         @Model.Content
     </div>
 
-    <label style="display:none;" id="labeldescription">Введите новое описание</label>
-    <textarea id="inputdescription" style="display:none; none max-width: 100%; height: 400px;">@Model.Content</textarea>
+    <label style="display:none;" id="labelTitle">Введите новое название</label>
+    <input style="display:none;" type="text" id="inputTitle" value='@Model.Title' />
 
-    <input asp-controller="Course" asp-area="" asp-action="Course" asp-route-id="@Model.course.Id" style="display:block;" type="submit" id="cancel" value="Назад к курсу" />
+    <label style="display:none;" id="labelContent">Введите новый контент</label>
+    <textarea id="inputContent" style="display:none; none max-width: 100%; width: 800px; height: 400px;">@Model.Content</textarea>
+
+    <input onclick="back(@Model.course.Id.ToString())" style="display:block;" type="submit" id="back" value="Назад к курсу" />
+
     @if (!ViewBag.IsCreator)
     {
-        <input asp-controller="Course" asp-area="" asp-action="Course" asp-route-id="@Model.course.Id" style="display:block;" type="submit" id="final" value="Завершить урок" />
+        if (!Model.Completed)
+        {
+            <input onclick="finish(@Model.course.Id.ToString())" style="display:block;" type="submit" id="finish" value="Завершить урок" />
+        }
     }
     <input onclick="save()" style="display:none;" type="submit" id="save" value="Сохранить изменения" />
+    <input onclick="show(false)" style="display:none;" type="submit" id="cancel" value="Отмена" />
 
-    <script>
-        // document.getElementById("purchase").addEventListener("click", async e => {
-        //     e.preventDefault();
-
-        //     const response = await fetch("/Course/Purchase", {
-        //         method: "POST",
-        //         headers: { "Accept": "application/json", "Content-Type": "application/json" },
-        //         body: JSON.stringify({
-        //         CourseId: @Model.Id
-        //         })
-        //     });
-
-        //     if (response.status === 200) {
-        //         window.location.reload();
-        //     }
-        // });
-        // async function purchase() {
-        //     const response = await fetch("/Course/Purchase", {
-        //         method: "POST",
-        //         headers: { "Accept": "application/json", "Content-Type": "application/json" },
-        //         body: JSON.stringify({
-        //             CourseId: @Model.Id
-        //                         })
-        //     });
-
-        //     if (response.status === 200) {
-        //         window.location.reload();
-        //     }
-        // }
-
-        async function edit() { //написать всплывание инаутов и кнопок сохранения
-
-        }
-
-        async function save() { //написать всплывание инаутов и кнопок сохранения
-
-        }
-        // document.getElementById("edit").addEventListener("click", async e => {
-        //     e.preventDefault();
-
-        //     const response = await fetch("/Course/Edit?id=" + @Model.Id.ToString(), {
-        //         method: "GET",
-        //         headers: { "Accept": "application/json", "Content-Type": "application/json" }
-        //     });
-        // });
-
-    </script>
 
 </body>
+

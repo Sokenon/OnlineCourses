@@ -38,7 +38,7 @@ namespace OnlineCourses.Controllers
             var count = await source.CountAsync();
             var courses = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync<Course>();
 
-            ViewBag.Teachers = await db.Users.Where(s => s.Role == "Teacher").ToListAsync<User>();
+            ViewBag.Teachers = await db.Users.Where(s => s.Role == "teacher").ToListAsync<User>();
             IndexViewModel viewPage = new IndexViewModel(courses, new PageViewModel(count, page, pageSize));
 
             return View("Main", viewPage);
@@ -161,7 +161,7 @@ namespace OnlineCourses.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteLesson([FromBody] LessonDTO id)
+        public async Task<IActionResult> DeleteLesson([FromBody] LessonIDDTO id)
         {
             if (authService.CheckTeacher(HttpContext.Request.Cookies["Token"]!.ToString()))
             {
@@ -176,7 +176,7 @@ namespace OnlineCourses.Controllers
         }
 
         [HttpPut]
-        public ActionResult EditLesson([FromBody] LessonDTO lesson)
+        public ActionResult EditLesson([FromBody] LessonIDDTO lesson)
         {
             if (courseService.EditLesson(lesson))
             {
@@ -222,6 +222,7 @@ namespace OnlineCourses.Controllers
         public ActionResult Lesson([FromQuery] int id)
         {
             int userId = int.Parse(tokenService.GetID(HttpContext.Request.Cookies["Token"]!.ToString()));
+
             LessonViewModel lesson = courseService.GetLesson(id, userId);
             if (lesson.Id <= 0)
             {
@@ -237,5 +238,37 @@ namespace OnlineCourses.Controllers
             return View(lesson);
         }
 
+        [HttpPost]
+        public ActionResult CreateLesson([FromBody] LessonDTO lesson)
+        {
+            Lesson newLesson = courseService.AddLesson(lesson);
+            return Ok();
+        }
+
+        [HttpGet]
+        public ActionResult Lessons([FromQuery] int id)
+        {
+            ModuleViewModel module = courseService.GetModule(id);
+            if (module == null)
+            {
+                return StatusCode(404);
+            }
+            return View("EditModule", module);
+        }
+
+        [HttpPost]
+        public ActionResult FinalLesson([FromBody] LessonIDDTO lesson)
+        {
+            int userId = int.Parse(tokenService.GetID(HttpContext.Request.Cookies["Token"]!.ToString()));
+            bool got = courseService.FinalLesson(lesson.LessonId, userId);
+            if (!got)
+            {
+                return StatusCode(404);
+            }
+            else
+            {
+                return StatusCode(200);
+            }
+        }
     }
 }
