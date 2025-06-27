@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Configuration;
 using OnlineCourses.Models;
 using OnlineCourses.Models.DTO;
+using OnlineCourses.Models.Types;
 using OnlineCourses.Models.ViewsModels;
 using OnlineCourses.Servers.Interfaces;
 using OnlineCourses.Services.Classes;
@@ -17,6 +19,12 @@ namespace OnlineCourses.Controllers
 {
     public class CourseController : Controller
     {
+        // TODO [архитектура][1] лучшие практики по архитектуре (например чистая архитектура и др)
+        // предполагают то, что приложение делится на слои, и каждый слой отвечает за свою часть приложения
+        // контроллеры нужны только для обработки запросов и передачи данных между слоями
+        // и не должны содержать бизнес-логику. Вобще почти всё,
+        // кроме проверки ролей и валидации входящих данных - это бизнес-логика (работа с бд, агрегация данных)
+        // это во всех контроллерах сейчас встречается
         ApplicationContext db;
         ITokenService tokenService;
         ICourseService courseService;
@@ -37,8 +45,8 @@ namespace OnlineCourses.Controllers
 
             var count = await source.CountAsync();
             var courses = await source.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync<Course>();
-
-            ViewBag.Teachers = await db.Users.Where(s => s.Role == "teacher").ToListAsync<User>();
+            
+            ViewBag.Teachers = await db.Users.Where(s => s.Role == UsersRoles.Teacher).ToListAsync<User>();
             IndexViewModel viewPage = new IndexViewModel(courses, new PageViewModel(count, page, pageSize));
 
             return View("Main", viewPage);
@@ -47,7 +55,7 @@ namespace OnlineCourses.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] CourseIdDTO id)
         {
-            if (authService.CheckTeacher(HttpContext.Request.Cookies["Token"]!.ToString()))
+            if (authService.CheckTeacher(HttpContext.Request.Cookies[AuthService.cookie]!.ToString()))
             {
                 if (!courseService.IsLearning(id.CourseId))
                 {
@@ -56,17 +64,29 @@ namespace OnlineCourses.Controllers
                     return StatusCode(200);
                 }
             }
-            return NotFound();
+            return StatusCode(403);
         }
 
         [HttpGet]
         public ActionResult Edit([FromQuery] int id)
         {
-            int userId = int.Parse(tokenService.GetID(HttpContext.Request.Cookies["Token"]!.ToString()));
+            // TODO [удобство\DRY принцип][1\2] заметил, что часто идёт работа с юзером 
+            // обычно такое оборачивают в отдельный декоратор
+            // (в c# это Model Binder, у чата спрашивал здесь https://chat.deepseek.com/a/chat/s/b1565521-8b17-4c98-b129-9e2a1bf4d058)
+            // получится один новый класс для того, чтобы достать юзера из httpContext'а 
+            // и получать его по аналогии с [FromQuery] int id, что-то вроде
+            /*
+             * Edit([FromQuery] int id,[FromUser] User user)
+             * {
+             *   var course = courseService.GetCourse(id, user.Id);
+             *   ....
+             * }
+             */
+            int userId = int.Parse(tokenService.GetClaim(HttpContext.Request.Cookies[AuthService.cookie]!.ToString(), ClaimsTypes.ID));
             var course = courseService.GetCourse(id, userId);
             if (course == null)
             {
-                return StatusCode(400);
+                return StatusCode(404);
             }
             return View(course);
         }
@@ -94,7 +114,7 @@ namespace OnlineCourses.Controllers
         [HttpGet]
         public ActionResult Course([FromQuery] int id)
         {
-            int userId = int.Parse(tokenService.GetID(HttpContext.Request.Cookies["Token"]!.ToString()));
+            int userId = int.Parse(tokenService.GetClaim(HttpContext.Request.Cookies[AuthService.cookie]!.ToString(), ClaimsTypes.ID));
             var course = courseService.GetCourse(id, userId);
 
             if (course == null)
@@ -103,21 +123,22 @@ namespace OnlineCourses.Controllers
             }
 
             ViewBag.Purchased = courseService.CheckCourse(id, userId);
-            bool userCreator = false;
             if (userId == course.TeacherId)
             {
-                userCreator = true;
+                ViewBag.IsCreator = true;
             }
-            ViewBag.IsCreator = userCreator;
+            else
+            {
+                ViewBag.IsCreator = false;
+            }
             return View(course);
         }
 
         [HttpPost]
         public ActionResult Purchase([FromBody] CourseIdDTO Id)
         {
-            int studentId = int.Parse(tokenService.GetID(HttpContext.Request.Cookies["Token"]!.ToString()));
-            bool save = courseService.Purchase(Id.CourseId, studentId);
-            if (save)
+            int studentId = int.Parse(tokenService.GetClaim(HttpContext.Request.Cookies[AuthService.cookie]!.ToString(), ClaimsTypes.ID));
+            if (courseService.Purchase(Id.CourseId, studentId))
             {
                 return StatusCode(200);
             }
@@ -130,7 +151,7 @@ namespace OnlineCourses.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteModule([FromBody] ModuleDTO id)
         {
-            if (authService.CheckTeacher(HttpContext.Request.Cookies["Token"]!.ToString()))
+            if (authService.CheckTeacher(HttpContext.Request.Cookies[AuthService.cookie]!.ToString()))
             {
                 if (!courseService.IsLearning(id.Id))
                 {
@@ -163,7 +184,7 @@ namespace OnlineCourses.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteLesson([FromBody] LessonIDDTO id)
         {
-            if (authService.CheckTeacher(HttpContext.Request.Cookies["Token"]!.ToString()))
+            if (authService.CheckTeacher(HttpContext.Request.Cookies[AuthService.cookie]!.ToString()))
             {
                 if (!courseService.IsLearning(id.LessonId))
                 {
@@ -188,9 +209,9 @@ namespace OnlineCourses.Controllers
         [HttpGet]
         public ActionResult CreatedCourses(int page = 1)
         {
-            if (authService.CheckTeacher(HttpContext.Request.Cookies["Token"]!.ToString()))
+            if (authService.CheckTeacher(HttpContext.Request.Cookies[AuthService.cookie]!.ToString()))
             {
-                int id = int.Parse(tokenService.GetID(Request.Cookies["Token"]!));
+                int id = int.Parse(tokenService.GetClaim(Request.Cookies[AuthService.cookie]!, ClaimsTypes.ID));
                 int pageSize = 10;
                 var source = courseService.CreatedCourses(id);
 
@@ -214,14 +235,14 @@ namespace OnlineCourses.Controllers
         [HttpPost]
         public ActionResult Create([FromBody] CourseDTO course)
         {
-            Course newCourse = courseService.Create(course.Title!, course.Description!, int.Parse(tokenService.GetID(Request.Cookies["Token"]!)));
+            Course newCourse = courseService.Create(course.Title ?? "" , course.Description ?? "", int.Parse(tokenService.GetClaim(Request.Cookies[AuthService.cookie]!, ClaimsTypes.ID)));
             return Ok(new { id = newCourse.Id });
         }
 
         [HttpGet]
         public ActionResult Lesson([FromQuery] int id)
         {
-            int userId = int.Parse(tokenService.GetID(HttpContext.Request.Cookies["Token"]!.ToString()));
+            int userId = int.Parse(tokenService.GetClaim(HttpContext.Request.Cookies[AuthService.cookie]!.ToString(), ClaimsTypes.ID));
 
             LessonViewModel lesson = courseService.GetLesson(id, userId);
             if (lesson.Id <= 0)
@@ -259,7 +280,7 @@ namespace OnlineCourses.Controllers
         [HttpPost]
         public ActionResult FinalLesson([FromBody] LessonIDDTO lesson)
         {
-            int userId = int.Parse(tokenService.GetID(HttpContext.Request.Cookies["Token"]!.ToString()));
+            int userId = int.Parse(tokenService.GetClaim(HttpContext.Request.Cookies[AuthService.cookie]!.ToString(), ClaimsTypes.ID));
             bool got = courseService.FinalLesson(lesson.LessonId, userId);
             if (!got)
             {

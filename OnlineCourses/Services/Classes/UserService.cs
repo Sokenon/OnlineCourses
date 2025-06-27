@@ -19,17 +19,9 @@ namespace OnlineCourses.Services.Classes
         public bool CheckUser(string email)
         {
             User? user = db.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return user != null;
         }
-
-        public User AddNewUser(string email, string passwordHash)
+        public User AddNewStudent(string email, string passwordHash)
         {
             User user = new User { Email = email, PasswordHash = passwordHash, Role = "student" };
             db.Users.AddAsync(user);
@@ -63,9 +55,9 @@ namespace OnlineCourses.Services.Classes
                 return user;
             }
         }
-        public void SetName (string username, int id)
+        public void SetName (string newUsername, int id)
         {
-            db.Users.Where(u => u.Id == id).ExecuteUpdate(s => s.SetProperty(u => u.Username, u => username));
+            db.Users.Where(u => u.Id == id).ExecuteUpdate(s => s.SetProperty(u => u.Username, u => newUsername));
         }
     }
 }

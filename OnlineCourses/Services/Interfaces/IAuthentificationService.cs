@@ -6,9 +6,8 @@ namespace OnlineCourses.Services.Interfaces
 {
     public interface IAuthentificationService
     {
-        public string ValidationInfo(LoginDTO info);
+        public string ValidationInfoAndHashPassword(LoginDTO info);
         public string Hash(string password);
-        public bool CheckTeacher(string token);
-        
+        public bool CheckTeacher(string token);        
     }
 }

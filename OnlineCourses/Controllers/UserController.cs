@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using OnlineCourses.Models;
 using OnlineCourses.Models.ViewsModels;
 using OnlineCourses.Servers.Interfaces;
+using OnlineCourses.Services.Classes;
 using OnlineCourses.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -32,33 +33,26 @@ namespace OnlineCourses.Controllers
         {
             try
             {
-                if (Request.Cookies["Token"] != null)
+                int id = int.Parse(tokenService.GetID(Request.Cookies[AuthService.cookie]!));
+                User? user = userService.FindUser(id);
+                ViewBag.User = user;
+
+                int pageSize = 10;
+                var source = courseService.StudentsCourses(id);
+                List<User_Course> complete = courseService.UserCorses(id);
+                ViewBag.IsComtlete = complete;
+
+                if (source != null)
                 {
-                    int id = int.Parse(tokenService.GetID(Request.Cookies["Token"]!));
-                    User? user = userService.FindUser(id);
-                    ViewBag.User = user;
+                    var count = source.Count();
+                    var courses = source.Skip((page - 1) * pageSize).Take(pageSize).ToList<Course>();
 
-                    int pageSize = 10;
-                    var source = courseService.StudentsCourses(id);
-                    List<User_Course> complete = courseService.UserCorses(id);
-                    ViewBag.IsComtlete = complete;
-
-                    if (source != null)
-                    {
-                        var count = source.Count();
-                        var courses = source.Skip((page - 1) * pageSize).Take(pageSize).ToList<Course>();
-
-                        IndexViewModel viewPage = new IndexViewModel(courses, new PageViewModel(count, page, pageSize));
-                        return View(viewPage);
-                    }
-                    else
-                    {
-                        return View();
-                    }
+                    IndexViewModel viewPage = new IndexViewModel(courses, new PageViewModel(count, page, pageSize));
+                    return View(viewPage);
                 }
                 else
                 {
-                    return Redirect("/auth/login");
+                    return View();
                 }
             }
             catch

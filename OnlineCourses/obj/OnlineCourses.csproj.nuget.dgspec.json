@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj": {}
+    "C:\\Users\\фф\\Documents\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj": {}
   },
   "projects": {
-    "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj": {
+    "C:\\Users\\фф\\Documents\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
+        "projectUniqueName": "C:\\Users\\фф\\Documents\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
         "projectName": "OnlineCourses",
-        "projectPath": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\user\\Documents\\Visual Studio 2022\\OnlineCourses\\OnlineCourses\\obj\\",
+        "projectPath": "C:\\Users\\фф\\Documents\\OnlineCourses\\OnlineCourses\\OnlineCourses.csproj",
+        "packagesPath": "C:\\Users\\фф\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\фф\\Documents\\OnlineCourses\\OnlineCourses\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\фф\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -53,6 +53,10 @@
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.8, )"
+            },
+            "Microsoft.Extensions.Caching.StackExchangeRedis": {
+              "target": "Package",
+              "version": "[9.0.2, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",

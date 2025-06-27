@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using OnlineCourses.Services.Classes;
 
 namespace OnlineCourses.Controllers
 {
@@ -28,51 +29,69 @@ namespace OnlineCourses.Controllers
             tokenService = token;
             userService = user;
         }
+
         [HttpPost]
         public ActionResult Login([FromBody] LoginDTO body)
         {
             HttpContext httpContext = HttpContext;
-            try
+            var bannedEmailService = httpContext.RequestServices.GetRequiredService<Redis>();
+            if (bannedEmailService.IsEmailDeleted(body.Email))
             {
-                User? user = userService.FindUser(body.Email, authService.ValidationInfo(body));
-                if (user != null)
+                httpContext.Response.WriteAsync("Пользователь удалён");
+                return new StatusCodeResult(403);
+            }
+            else
+            {
+                try
                 {
-                    httpContext.Response.Cookies.Append("Token", new JwtSecurityTokenHandler().WriteToken(tokenService.Token(user!.Id!.ToString(), user!.Role!)));
-                    return new StatusCodeResult(200);
+                    User? user = userService.FindUser(body.Email, authService.ValidationInfoAndHashPassword(body));
+                    if (user != null)
+                    {
+                        httpContext.Response.Cookies.Append(AuthService.cookie, new JwtSecurityTokenHandler().WriteToken(tokenService.Token(user!.Id!.ToString(), user!.Role!)));
+                        return new StatusCodeResult(200);
+                    }
+                    else
+                    {
+                        return new StatusCodeResult(401);
+                    }
                 }
-                else
+                catch (Exception)
                 {
                     return new StatusCodeResult(401);
+                    throw;
                 }
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(401);
-                throw;
             }
         }
         [HttpPost]
         public ActionResult Registration([FromBody] LoginDTO body)
         {
             HttpContext httpContext = HttpContext;
-            try
+            var bannedEmailService = httpContext.RequestServices.GetRequiredService<Redis>();
+            if (bannedEmailService.IsEmailDeleted(body.Email))
             {
-                string hash = authService.ValidationInfo(body);
-                if (!userService.CheckUser(body.Email))
+                httpContext.Response.WriteAsync("Пользователь удалён");
+                return new StatusCodeResult(403);
+            }
+            else
+            {
+                try
                 {
-                    User user = userService.AddNewUser(body.Email, hash);
-                    httpContext.Response.Cookies.Append("Token", new JwtSecurityTokenHandler().WriteToken(tokenService.Token(user!.Id!.ToString(), user!.Role!)));
-                    return new StatusCodeResult(200);
+                    if (!userService.CheckUser(body.Email))
+                    {
+                        User user = userService.AddNewUser(body.Email, authService.ValidationInfoAndHashPassword(body));
+                        httpContext.Response.Cookies.Append(AuthService.cookie, new JwtSecurityTokenHandler().WriteToken(tokenService.Token(user!.Id!.ToString(), user!.Role!)));
+                        return new StatusCodeResult(200);
+                    }
+                    else
+                    {
+                        return new StatusCodeResult(404);
+                    }
                 }
-                else
+                catch (Exception)
                 {
                     return new StatusCodeResult(404);
+                    throw;
                 }
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(404);
-                throw;
             }
         }
         [HttpGet]

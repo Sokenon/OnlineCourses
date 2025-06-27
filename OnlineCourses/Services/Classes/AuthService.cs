@@ -8,17 +8,22 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace OnlineCourses.Services.Classes
 {
     public class AuthService : IAuthentificationService
     {
-        public ITokenService tokenService;
-        public AuthService(ITokenService Token)
+        static public string cookie = "Token";
+        private ITokenService tokenService;
+        private IConfiguration configuration;
+
+        public AuthService(ITokenService Token, IConfiguration configuration)
         {
             tokenService = Token;
+            this.configuration = configuration;
         }
-        public string ValidationInfo(LoginDTO info)
+        public string ValidationInfoAndHashPassword(LoginDTO info)
         {
             Regex regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
             if (regex.IsMatch(info.Email))
@@ -33,7 +38,7 @@ namespace OnlineCourses.Services.Classes
         }
         public string Hash (string password)
         {
-            byte[] salt = Convert.FromBase64String("NDU2NTQ2NDI0Mzc=");
+            byte[] salt = Convert.FromBase64String(configuration.GetSection("Auth").GetValue<string>("Salt")!);
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: password!,
                 salt: salt,
@@ -44,8 +49,8 @@ namespace OnlineCourses.Services.Classes
         }
         public bool CheckTeacher(string token)
         {
-            Dictionary<string, string> claims = tokenService.DescriptionTokenClaims(token);
-            bool check = claims["Role"] == "teacher" ? true : false;
+            string role = tokenService.GetClaim(token, ClaimTypes.Role);
+            bool check = role == "teacher" ? true : false;
             return check;
         }
 

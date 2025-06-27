@@ -8,6 +8,7 @@ using OnlineCourses.Services.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace OnlineCourses.Services.Classes
 {
@@ -23,15 +24,10 @@ namespace OnlineCourses.Services.Classes
         }
         public List<Course> StudentsCourses(int idStudent)
         {
-            List<User_Course> array = UserCorses(idStudent);
-            if (array.Count() != 0)
+            List <Course> result = db.User_Courses.Where(uc => uc.StudentId == idStudent).Join(db.Courses, uc => uc.CourseId, c => c.Id, (uc, c) => new { c.Id, c.Title, c.Description, c.TeacherId }).Select(x => new Course { Id = x.Id, Title = x.Title, Description = x.Description, TeacherId = x.TeacherId}).ToList<Course>();
+            if (result.Count() != 0)
             {
-                List<int> idCoursesArray = new List<int>();
-                foreach (User_Course uc in array)
-                {
-                    idCoursesArray.Add(uc.CourseId);
-                }
-                return db.Courses.Where(c => idCoursesArray.Contains(c.Id)).ToList<Course>();
+                return result;
             }
             else
             {
@@ -141,26 +137,15 @@ namespace OnlineCourses.Services.Classes
             else
             {
                 User_Course uc = new User_Course { StudentId = studentId, CourseId = courseId, Completed = false };
-                db.AddAsync(uc);
+                db.Add(uc);
                 db.SaveChanges();
                 return true;
             }
         }
         public bool Edit(CourseDTO course)
         {
-            if (course.Title != null)
-            {
-                db.Courses.Where(c => c.Id == course.Id).ExecuteUpdate(p => p.SetProperty(c => c.Title, course.Title));
-                db.SaveChanges();
-                return true;
-            }
-            if (course.Description != null)
-            {
-                db.Courses.Where(c => c.Id == course.Id).ExecuteUpdate(p => p.SetProperty(c => c.Description, course.Description));
-                db.SaveChanges();
-                return true;
-            }
-            return false;
+            var updated = db.Courses.Where(c => c.Id == course.Id).ExecuteUpdate(p => p.SetProperty(c => c.Title, c => course.Title ?? c.Title).SetProperty(c => c.Description, c => course.Description ?? c.Description));
+            return updated > 0;
         }
         public bool EditModule(ModuleDTO module)
         {

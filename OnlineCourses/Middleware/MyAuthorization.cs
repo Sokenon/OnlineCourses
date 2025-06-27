@@ -1,5 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.IdentityModel.Tokens;
 using OnlineCourses.Servers.Interfaces;
+using OnlineCourses.Services.Classes;
 using System.Security.Claims;
 
 namespace OnlineCourses.Middleware
